@@ -61,6 +61,53 @@ class EmptyEnv16x16(EmptyEnv):
     def __init__(self):
         super().__init__(size=16)
 
+############################################################
+# Michael custom environments
+class EmptyEnv7x7(EmptyEnv):
+    def __init__(self):
+        super().__init__(size=7)
+
+register(
+    id='MiniGrid-Empty-7x7-v0',
+    entry_point='gym_minigrid.envs:EmptyEnv7x7'
+)
+
+class EmptyRandomEnv7x7(EmptyEnv):
+    def __init__(self):
+        super().__init__(size=7, agent_start_pos=None)
+
+register(
+    id='MiniGrid-Empty-Random-7x7-v0',
+    entry_point='gym_minigrid.envs:EmptyRandomEnv7x7'
+)
+
+class EmptyEnv9x9(EmptyEnv):
+    def __init__(self):
+        super().__init__(size=9)
+
+register(
+    id='MiniGrid-Empty-9x9-v0',
+    entry_point='gym_minigrid.envs:EmptyEnv9x9'
+)
+
+class EmptyRandomEnv9x9(EmptyEnv):
+    def __init__(self):
+        super().__init__(size=9, agent_start_pos=None)
+
+register(
+    id='MiniGrid-Empty-Random-9x9-v0',
+    entry_point='gym_minigrid.envs:EmptyRandomEnv9x9'
+)
+
+class EmptyRandomEnv16x16(EmptyEnv):
+    def __init__(self):
+        super().__init__(size=16, agent_start_pos=None)
+
+register(
+    id='MiniGrid-Empty-Random-16x16-v0',
+    entry_point='gym_minigrid.envs:EmptyRandomEnv16x16'
+)
+############################################################
 register(
     id='MiniGrid-Empty-5x5-v0',
     entry_point='gym_minigrid.envs:EmptyEnv5x5'
