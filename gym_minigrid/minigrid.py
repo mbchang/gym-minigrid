@@ -195,6 +195,7 @@ class Lava(WorldObj):
 class Wall(WorldObj):
     def __init__(self, color='grey'):
         super().__init__('wall', color)
+        self._visit_count = 0
 
     def see_behind(self):
         return False
@@ -207,6 +208,13 @@ class Wall(WorldObj):
             (CELL_PIXELS,           0),
             (0          ,           0)
         ])
+
+    def increment_count(self):
+        self._visit_count += 1
+
+    @property
+    def visit_count(self):
+        return self._visit_count
 
 class Door(WorldObj):
     def __init__(self, color, is_open=False, is_locked=False):
@@ -826,6 +834,9 @@ class MiniGridEnv(gym.Env):
 
         return 1 - 0.9 * (self.step_count / self.max_steps)
 
+    def _wall_reward(self, wall_cell):
+        return 1.0/ np.sqrt(wall_cell.visit_count)
+
     def _rand_int(self, low, high):
         """
         Generate random integer in [low,high[
@@ -995,6 +1006,10 @@ class MiniGridEnv(gym.Env):
 
         return self.agent_pos + self.dir_vec
 
+    @property
+    def right_pos(self):
+        return self.agent_pos + self.right_vec
+
     def get_view_coords(self, i, j):
         """
         Translate and rotate absolute grid coordinates (i, j) into the
@@ -1152,6 +1167,14 @@ class MiniGridEnv(gym.Env):
 
         obs = self.gen_obs()
 
+        #######################################################
+        next_right_cell = self.grid.get(*self.right_pos)
+        if type(next_right_cell) == Wall:
+            next_right_cell.increment_count()
+            wall_coeff = 0.01
+            wall_bonus = wall_coeff*self._wall_reward(next_right_cell)
+            reward += wall_bonus
+        #######################################################
         return obs, reward, done, {}
 
     def gen_obs_grid(self):
