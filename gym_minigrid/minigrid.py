@@ -1162,8 +1162,11 @@ class MiniGridEnv(gym.Env):
         else:
             assert False, "unknown action"
 
-        if self.step_count >= self.max_steps:
-            done = True
+        #######################################################
+        # MC: control timeout on the agent side, not environment side
+        # if self.step_count >= self.max_steps:
+        #     done = True
+        #######################################################
 
         obs = self.gen_obs()
 
